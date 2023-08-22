@@ -77,6 +77,7 @@ span{
 display: flex;
 grid-gap: 1rem;
 flex-wrap: wrap;
+height: max-content;
 }
 
 </style>
