@@ -60,6 +60,10 @@ button{
 main{
   display: grid;
   grid-template-columns: 1fr 1fr;
+  
+}
+main>div{
+  margin-block: auto;
 }
 /* Firefox */
 input[type=number] {
