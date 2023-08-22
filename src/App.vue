@@ -18,6 +18,7 @@
 
     <div id="results">
       <span v-for="number in results">{{ number }}</span>
+      <button @click="results=''">Clear</button>
     </div>
     
   
@@ -60,6 +61,7 @@ button{
 main{
   display: grid;
   grid-template-columns: 1fr 1fr;
+  height: 100%;
   
 }
 main>div{
