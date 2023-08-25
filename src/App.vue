@@ -5,7 +5,7 @@
       <button @click="generateNumber">BET</button>
       <div>
         <label for="evens">Evens</label>
-        <span>{{ evensWon && !rolledZero ? '✅' : '❌' }}</span>
+        <span>{{ evensWon ? '✅' : '❌' }}</span>
         <input v-model="evens" type="number" name="evens" id="evens">
         <button @click="evens=''">Clear</button>
       </div>
@@ -40,9 +40,11 @@ const odds = ref(0)
 const evens = ref(0)
 const results = ref([])
 const money = ref(100000)
+const evensMulti = ref(1)
+const oddsMulti = ref(1)
 
 const evensWon = computed(()=>{
-return displayNumber.value % 2 === 0;
+  return (displayNumber.value % 2 === 0 && displayNumber.value !== 0)
 })
 const oddsWon = computed(()=>{
   return displayNumber.value % 2 !== 0;
@@ -51,14 +53,14 @@ const rolledZero = computed(()=>{
   return displayNumber.value === 0;
 })
   
-
 function generateNumber(){
   displayNumber.value = Math.floor(Math.random() * 38);
   results.value.unshift(displayNumber.value)
-
+  money.value -= evens.value * evensMulti.value
+  money.value -= odds.value * oddsMulti.value
+  if (evensWon.value) oddsMulti.value *= 2
+  if (oddsWon.value) evensMulti.value *= 2
 }
-
-
 
 </script>
 
