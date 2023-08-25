@@ -1,28 +1,34 @@
 <template>
   <main>
     <div>
-      <p>{{displayNumber}}</p>
+      <Transition name="fade" mode="out-in">
+        <p :key="displayNumber">{{displayNumber}}</p>
+      </Transition>
+      
       <button @click="generateNumber">BET</button>
       <div>
-        <label for="evens">Evens</label>
+        <label for="evens">Evens: {{ evensMulti }}x</label>
         <span>{{ evensWon ? '✅' : '❌' }}</span>
         <input v-model="evens" type="number" name="evens" id="evens">
         <button @click="evens=''">Clear</button>
       </div>
       
       <div>
-        <label for="odds">Odds</label>
+        <label for="odds">Odds: {{ oddsMulti }}x</label>
         <span>{{ oddsWon ? '✅' : '❌' }}</span>
         
         <input v-model="odds" type="number" name="odds" id="odds">
         <button @click="odds=''" >Clear</button>
       </div>
-        <p>{{money}}:-</p>
+      <Transition name="fade" mode="out-in">
+        <p :key="money">{{money}}:-</p>
+      </Transition>
     </div>
     
-
     <div id="results">
+     <TransitionGroup name="results">
       <HistoryNumber v-for="number in results" :key="number" :number="number"></HistoryNumber>
+     </TransitionGroup>
       <button @click="results=[]">Clear</button>
     </div>
   
@@ -56,10 +62,26 @@ const rolledZero = computed(()=>{
 function generateNumber(){
   displayNumber.value = Math.floor(Math.random() * 38);
   results.value.unshift(displayNumber.value)
-  money.value -= evens.value * evensMulti.value
-  money.value -= odds.value * oddsMulti.value
-  if (evensWon.value) oddsMulti.value *= 2
-  if (oddsWon.value) evensMulti.value *= 2
+
+
+  if (evensWon.value){
+    money.value -= odds.value
+    oddsMulti.value *= 2
+    money.value += evens.value * evensMulti.value
+    evensMulti.value = 1
+  }
+
+  if (oddsWon.value){
+    money.value -= evens.value
+    evensMulti.value *= 2
+    money.value += odds.value * oddsMulti.value
+    oddsMulti.value = 1
+  }
+
+  if (rolledZero.value){
+    evensMulti.value = 1
+    oddsMulti.value = 1
+  }
 }
 
 </script>
@@ -105,6 +127,25 @@ display: flex;
 grid-gap: 1rem;
 flex-wrap: wrap;
 height: max-content;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.1s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+.results-move,
+.results-enter-active,
+.results-leave-active {
+  transition: all 0.5s ease;
+}
+.results-enter-from,
+.results-leave-to {
+  opacity: 0;
+  transform: translateX(-30px);
 }
 
 </style>
