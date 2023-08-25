@@ -2,7 +2,7 @@
   <main>
     <div>
       <p>{{displayNumber}}</p>
-      <button @click="generateNumber">Generate Number</button>
+      <button @click="generateNumber">BET</button>
       <div>
         <label for="evens">Evens</label>
         <input v-model="evens" type="number" name="evens" id="evens">
@@ -14,32 +14,33 @@
         <input v-model="odds" type="number" name="odds" id="odds">
         <button @click="odds=''" >Clear</button>
       </div>
-    </div>
-
-    <div id="results">
-      <span v-for="number in results">{{ number }}</span>
-      <button @click="results=''">Clear</button>
+        <p>{{money}}:-</p>
     </div>
     
+
+    <div id="results">
+      <HistoryNumber v-for="number in results" :key="number" :number="number"></HistoryNumber>
+      <button @click="results=[]">Clear</button>
+    </div>
   
   </main>
 </template>
 
 <script setup>
 import { ref } from 'vue';
+import HistoryNumber from './components/HistoryNumber.vue';
 
 const displayNumber = ref(0)
 const odds = ref(0)
 const evens = ref(0)
 const results = ref([])
+const money = ref(100000)
   
 
 function generateNumber(){
   displayNumber.value = Math.floor(Math.random() * 38);
   results.value.unshift(displayNumber.value)
-  console.log(results.value)
 }
-
 
 </script>
 
