@@ -26,9 +26,11 @@
     </div>
     
     <div id="results">
-     <TransitionGroup name="results">
-      <HistoryNumber v-for="number in results" :key="number" :number="number"></HistoryNumber>
-     </TransitionGroup>
+      <div>
+        <TransitionGroup name="results">
+          <HistoryNumber v-for="number in results" :key="number.id" :number="number"></HistoryNumber>
+        </TransitionGroup>
+      </div>
       <button @click="results=[]">Clear</button>
     </div>
   
@@ -61,7 +63,11 @@ const rolledZero = computed(()=>{
   
 function generateNumber(){
   displayNumber.value = Math.floor(Math.random() * 38);
-  results.value.unshift(displayNumber.value)
+  results.value.unshift({
+   number: displayNumber.value,
+   id:Date.now()
+  })
+  results.value = results.value.slice(0, 59)
 
 
   if (evensWon.value){
@@ -122,12 +128,18 @@ label{
 span{
 
 }
-#results{
+#results>div{
 display: flex;
 grid-gap: 1rem;
 flex-wrap: wrap;
 height: max-content;
+margin: 1rem;
 }
+#results{
+  display: grid;
+}
+  
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.1s ease;
