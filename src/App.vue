@@ -5,12 +5,15 @@
       <button @click="generateNumber">BET</button>
       <div>
         <label for="evens">Evens</label>
+        <span>{{ evensWon && !rolledZero ? '✅' : '❌' }}</span>
         <input v-model="evens" type="number" name="evens" id="evens">
         <button @click="evens=''">Clear</button>
       </div>
       
       <div>
         <label for="odds">Odds</label>
+        <span>{{ oddsWon ? '✅' : '❌' }}</span>
+        
         <input v-model="odds" type="number" name="odds" id="odds">
         <button @click="odds=''" >Clear</button>
       </div>
@@ -29,18 +32,33 @@
 <script setup>
 import { ref } from 'vue';
 import HistoryNumber from './components/HistoryNumber.vue';
+import { computed } from 'vue';
+
 
 const displayNumber = ref(0)
 const odds = ref(0)
 const evens = ref(0)
 const results = ref([])
 const money = ref(100000)
+
+const evensWon = computed(()=>{
+return displayNumber.value % 2 === 0;
+})
+const oddsWon = computed(()=>{
+  return displayNumber.value % 2 !== 0;
+})
+const rolledZero = computed(()=>{
+  return displayNumber.value === 0;
+})
   
 
 function generateNumber(){
   displayNumber.value = Math.floor(Math.random() * 38);
   results.value.unshift(displayNumber.value)
+
 }
+
+
 
 </script>
 
