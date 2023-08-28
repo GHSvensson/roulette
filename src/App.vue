@@ -47,7 +47,7 @@ const displayNumber = ref(0)
 const odds = ref(0)
 const evens = ref(0)
 const results = ref([])
-const money = ref(100000)
+const money = ref(100)
 const evensMulti = ref(1)
 const oddsMulti = ref(1)
 
@@ -83,10 +83,10 @@ function generateNumber(){
     money.value += odds.value * oddsMulti.value
     oddsMulti.value = 1
   }
-
+    //multiplier applied to both in case of zero
   if (rolledZero.value){
-    evensMulti.value = 1
-    oddsMulti.value = 1
+    evensMulti.value *= 2
+    oddsMulti.value *= 2
   }
 }
 
