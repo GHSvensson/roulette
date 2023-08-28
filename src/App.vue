@@ -4,16 +4,15 @@
       <Transition name="fade" mode="out-in">
         <p :key="displayNumber">{{displayNumber}}</p>
       </Transition>
-      
-      <button @click="generateNumber">BET</button>
-      <div>
+
+      <div class="input-container">
         <label for="evens">Evens: {{ evensMulti }}x</label>
         <span>{{ evensWon ? '✅' : '❌' }}</span>
         <input v-model="evens" type="number" name="evens" id="evens">
         <button @click="evens=''">Clear</button>
       </div>
       
-      <div>
+      <div class="input-container">
         <label for="odds">Odds: {{ oddsMulti }}x</label>
         <span>{{ oddsWon ? '✅' : '❌' }}</span>
         
@@ -24,7 +23,7 @@
         <p :key="money">{{money}}:-</p>
       </Transition>
     </div>
-    
+    <button class="bet-button" @click="generateNumber">BET</button>
     <div id="results">
       <div>
         <TransitionGroup name="results">
@@ -67,7 +66,7 @@ function generateNumber(){
    number: displayNumber.value,
    id:Date.now()
   })
-  results.value = results.value.slice(0, 59)
+  results.value = results.value.slice(0, 76)
 
 
   if (evensWon.value){
@@ -104,13 +103,13 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-button{
-  margin-inline: auto;
-}
+
 main{
   display: grid;
-  grid-template-columns: 1fr 1fr;
   height: 100%;
+  place-content: center;
+  max-width: 500px;
+  margin-inline: auto;
   
 }
 main>div{
@@ -120,14 +119,21 @@ main>div{
 input[type=number] {
   -moz-appearance: textfield;
 }
+.input-container{
+  display: flex;
+  justify-content: center;
+}
 
 label{
   display: block;
   text-align: center;
 }
-span{
 
+.bet-button{
+ width: auto;
+ font-size: 2rem;
 }
+
 #results>div{
 display: flex;
 grid-gap: 1rem;
