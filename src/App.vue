@@ -39,10 +39,7 @@
     </div>
    <GameOver v-if="showGameOverModal" @hideModal="restartGame"></GameOver>
     </div>
-    
-   <div class="tracker">
-   {{tenStreak}}
-  </div>
+    <Streaks :streaks="streaks"></Streaks>
   </main>
 </template>
 
@@ -51,7 +48,8 @@ import { ref } from 'vue';
 import HistoryNumber from './components/HistoryNumber.vue';
 import { computed } from 'vue';
 import GameOver from './components/GameOver.vue';
-import { v4 as uuidv4 } from 'uuid';
+import { parse, v4 as uuidv4 } from 'uuid';
+import Streaks from './components/Streaks.vue';
 
 
 const displayNumber = ref(0)
@@ -65,8 +63,19 @@ const startingMoney = ref()
 const showGameOverModal = ref(false)
 const consecutiveEvens = ref(0)
 const consecutiveOdds = ref(0)
-const tenStreak = ref(0)
 const autoSpinCounter = ref(0)
+const streaks = ref({
+  4: 0,
+  5: 0,
+  6: 0,
+  7: 0,
+  8: 0,
+  9: 0,
+  10: 0,
+  11: 0,
+  12: 0,
+  13: 0,
+})
 
 const evensWon = computed(()=>{
   return (displayNumber.value % 2 === 0 && displayNumber.value !== 0)
@@ -95,11 +104,7 @@ function generateNumber(){
 
     consecutiveEvens.value++;
     consecutiveOdds.value = 0
-
-    if (consecutiveEvens.value === 10){
-      tenStreak.value++;
-      consecutiveEvens.value = 0;
-    }
+    handleStreaks("evens");
   }
 
   if (oddsWon.value){
@@ -110,11 +115,8 @@ function generateNumber(){
 
     consecutiveOdds.value++;
     consecutiveEvens.value = 0;
-
-    if (consecutiveOdds.value === 10){
-      tenStreak.value++;
-      consecutiveOdds.value = 0;
-  }}
+    handleStreaks("odds");
+}
     //multiplier applied to both in case of zero
   if (rolledZero.value){
     evensMulti.value *= 2
@@ -123,6 +125,24 @@ function generateNumber(){
   if (money.value<=0){
     showGameOverModal.value = true;
   }
+}
+
+function handleStreaks(type){
+  if (type === "odds"){
+    Object.keys(streaks.value).forEach((streak) => {
+    if (consecutiveOdds.value === parseInt(streak)){
+      streaks.value[streak]++;
+    }
+   })
+  }
+  if (type === "evens"){
+    Object.keys(streaks.value).forEach((streak) => {
+    if (consecutiveEvens.value === parseInt(streak)){
+      streaks.value[streak]++;
+    }
+   })
+  }
+
 }
 
 function autoSpin(){
@@ -190,11 +210,13 @@ label{
 }
 
 .tracker{
-  width: 10rem;
-  height: 10rem;
-  background-color: white;
-  font-size: 5rem;
+  display: flex;
+  gap: 1rem;
+  background-color: rgba(2, 2, 2, 0.34);
+  font-size: 2rem;
   text-align: center;
+  border-radius: 20px;
+  
 }
 
 .bet-button{
